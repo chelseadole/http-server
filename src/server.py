@@ -6,21 +6,23 @@ import socket
 def server():
     """Server side socket."""
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM, socket.IPPROTO_TCP)
-    server.bind(('127.0.0.1', 5010))
+    server.bind(('127.0.0.1', 5015))
     server.listen(1)
     conn, addr = server.accept()
 
     msg_received = ''
-    buffer_length = 10
+    buffer_stop = '§'
     message_complete = False
     while not message_complete:
-        part = conn.recv(buffer_length)
+        part = conn.recv(10)
+        print('hi')
+        print(part)
         msg_received += part.decode('utf8')
-        if len(part) < buffer_length:
+        if buffer_stop in part.decode('utf8'):
             break
 
     print(msg_received)
-    conn.sendall(response_ok())
+    conn.sendall(response_ok() + buffer_stop.encode('utf8'))
 
     conn.close()
     server.close()
