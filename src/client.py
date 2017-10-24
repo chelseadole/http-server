@@ -1,4 +1,4 @@
-"""."""
+"""Client socket."""
 
 import socket
 
@@ -11,7 +11,7 @@ def client(message):
     client = socket.socket(*stream_info[:3])
     client.connect(stream_info[-1])
 
-    message = u'Un mensaje über importante con accentos.'
+    message = u'Un mensaje über importante con accentos éóí.'
     client.sendall(message.encode('utf8'))
 
     reply_complete = False
@@ -21,4 +21,4 @@ def client(message):
         if len(part) < 10:
             break
 
-    client.close()
+    # client.close()
