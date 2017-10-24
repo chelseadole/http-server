@@ -10,8 +10,6 @@ def server():
     server.listen(1)
     conn, addr = server.accept()
 
-    conn.recv(10)
-
     msg_received = ''
     buffer_length = 10
     message_complete = False
