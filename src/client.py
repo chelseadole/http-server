@@ -1,7 +1,6 @@
 """."""
 
 import socket
-import sys
 
 
 def client(message):
@@ -12,20 +11,14 @@ def client(message):
     client = socket.socket(*stream_info[:3])
     client.connect(stream_info[-1])
 
-
     message = u'Un mensaje über importante con accentos.'
-    print (sys.stderr, 'sending "%s"' % message)
     client.sendall(message.encode('utf8'))
 
-    buffer_length = 10
     reply_complete = False
-
     while not reply_complete:
-        part = client.recv(buffer_length)
+        part = client.recv(10)
         part(part.decode('utf8'))
-        if len(part) < buffer_length:
+        if len(part) < 10:
             break
 
     client.close()
-
-client('something blue or something green')
