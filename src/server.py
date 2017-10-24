@@ -12,16 +12,18 @@ def server():
 
     conn.recv(10)
 
-    msg = ''
+    msg_recieved = ''
+    msg_sent = 'Roger, this is the server, I hear you loud and clear!'
+    buffer_length = 10
     message_complete = False
     while not message_complete:
-        part = conn.recv(10)
+        part = conn.recv(buffer_length)
         print(part.decode('utf8'))
-        msg += part
-        if len(part) < 10:
+        msg_recieved += part.decode('utf8')
+        if len(part) < buffer_length:
             break
 
-    conn.sendall('a reply from the server'.encode('utf8'))
+    conn.sendall(msg_sent.encode('utf8'))
 
     conn.close()
     server.close()
