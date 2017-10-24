@@ -17,3 +17,7 @@ def test_msg_received_str():
     server()
     client()
     assert len(msg_received) > 2
+
+def test_buffer_len():
+    from server import server
+    
