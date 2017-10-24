@@ -13,7 +13,6 @@ def server():
     conn.recv(10)
 
     msg_recieved = ''
-    msg_sent = 'Roger, this is the server, I hear you loud and clear!'
     buffer_length = 10
     message_complete = False
     while not message_complete:
@@ -23,7 +22,21 @@ def server():
         if len(part) < buffer_length:
             break
 
-    conn.sendall(msg_sent.encode('utf8'))
+    conn.sendall(msg_recieved.encode('utf8'))
+
+    return msg_recieved
 
     conn.close()
     server.close()
+
+
+def response_ok():
+    """200 OK response for client."""
+    ok_200_msg = u'HTTP/1.1 200 OK \n Content-Type: text/plain \n <CRLF> \n Message Received.'
+    conn.sendall(ok_200_msg)
+
+
+def response_error():
+    """500 Server Error response for client."""
+    error_500_msg = u'HTTP/1.1 500 Internal Server Error \n Content-Type: text/plain \n <CRLF> \n Server Error.'
+    conn.sendall(error_500_msg)
