@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """Server socket."""
 
 import socket
@@ -6,42 +7,41 @@ import socket
 def server():
     """Server side socket."""
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM, socket.IPPROTO_TCP)
-    server.bind(('127.0.0.1', 5015))
+    server.bind(('127.0.0.1', 5000))
     server.listen(1)
-    conn, addr = server.accept()
 
-    msg_received = ''
-    buffer_stop = '§'
-    message_complete = False
-    while not message_complete:
-        part = conn.recv(10)
-        print('hi')
-        print(part)
-        msg_received += part.decode('utf8')
-        if buffer_stop in part.decode('utf8'):
-            break
+    try:
+        while True:
+            conn, addr = server.accept()
+            msg_received = b''
+            buffer_stop = b'\xa7'
+            message_complete = False
+            while not message_complete:
+                part = conn.recv(10)
+                msg_received += part
+                print (msg_received)
+                if buffer_stop in part:
+                    break
 
-    print(msg_received)
-    conn.sendall(response_ok() + buffer_stop.encode('utf8'))
+            print(msg_received.replace(buffer_stop, b''))
+            conn.sendall(response_ok() + buffer_stop)
 
-    conn.close()
-    server.close()
+            conn.close()
 
-    if KeyboardInterrupt:
+    except KeyboardInterrupt:
         conn.close()
         server.close()
 
 
 def response_ok():
     """200 Response."""
-    return u'HTTP/1.1 200 OK \n Content-Type: text/plain \n <CRLF> \n Message Received.'.encode('utf8')
+    return b'HTTP/1.1 200 OK \n Content-Type: text/plain \n <CRLF> \n Message Received.'
 
 
 def response_error():
     """500 Server Error response for client."""
-    error_500_msg = u'HTTP/1.1 500 Internal Server Error \n Content-Type: text/plain \n <CRLF> \n Server Error.'
-    conn.sendall(error_500_msg.encode('utf8'))
-    return error_500_msg
+    return b'HTTP/1.1 500 Internal Server Error \n Content-Type: text/plain \n <CRLF> \n Server Error.'
+
 
 if __name__ == '__main__':
     server()
