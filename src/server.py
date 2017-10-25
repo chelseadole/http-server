@@ -45,22 +45,23 @@ def response_error(request_info):
 
 def parse_request(request):
     """Parse request, validate or invalidate request."""
-    request_method = request.split()[0]
-    request_prot = request.split()[2]
-    request_host = request.split()[5]
+    request_method, request_prot, host_tag, request_host = request.split()[0], request.split()[2], request.split()[3], request.split()[4]
+    host, port = request_host.split(':')[0], request_host.split(':')[1]
 
     if request_method != 'GET':
         response_error('Method')
-
-    if request_prot != 'HTTP/1.1':
+    elif request_prot != 'HTTP/1.1':
         response_error('Protocol')
-
-    host = request_host.split(':')[0]
-    port = request_host.split(':')[1]
-
-    if len(host.split('.')) != 4 or not [i.isdigit() for i in host.split('.')]:
+    elif len(host.split('.')) != 4 or not [i.isdigit() for i in host.split('.')]:
         response_error('Host')
+    elif host_tag != 'Host:':
+        response_error('Host')
+    elif not port.isdigit():
+        response_error('Host')
+    else:
+        return request.split()[1]
 
+    "GET /webroot HTTP/1.1\r\n\r\nHost: {}\r\n\r\n"
 
 if __name__ == '__main__':
     server()
