@@ -38,9 +38,23 @@ def response_ok():
     return b'HTTP/1.1 200 OK \n Content-Type: text/plain \n <CRLF> \n Message Received.'
 
 
-def response_error():
+def response_error(request_info):
     """500 Server Error response for client."""
     return b'HTTP/1.1 500 Internal Server Error \n Content-Type: text/plain \n <CRLF> \n Server Error.'
+
+
+def parse_request(request):
+    """Parse request, validate or invalidate request."""
+    request_type = request.split()[0]
+    request_uri = request.split()[1]
+    request_prot = request.split()[2]
+
+    if request_type != 'GET':
+        response_error(request_type)
+
+    if request_prot != 'HTTP/1.1':
+        response_error(request_prot)
+
 
 
 if __name__ == '__main__':
