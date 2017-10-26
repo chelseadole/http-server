@@ -2,6 +2,7 @@
 """Server socket."""
 
 import socket
+import os
 
 
 def server():
@@ -50,12 +51,22 @@ def response_error(request_info):
         response_ok()
 
 
+def resolve_uri(uri):
+    """Parse and redirect URIs to display information on terminal."""
+    if os.path.isdir(uri):
+        dir_contents = os.listdir(uri)
+        for item in dir_contents:
+            print(item)
+    elif os.path.isfile(uri):
+        file = os.open(uri, os.O_RDONLY)
+        read_file = os.read(file, 9000)
+        print(read_file)
+
+
 def parse_request(request):
     """Parse request, validate or invalidate request."""
-    print('made it to parse_request')
     request = request.decode('utf8')
-    print(request.split())
-    request_method, request_prot, host_tag, request_host = request.split()[0], request.split()[2], request.split()[3], request.split()[4]
+    request_method, request_prot, content_type, host_tag, request_host = request.split()[0], request.split()[2], request.split()[5], request.split()[6], request.split()[7]
     host, port = request_host.split(':')[0], request_host.split(':')[1]
 
     if request_method != 'GET':
