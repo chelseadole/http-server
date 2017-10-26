@@ -8,7 +8,7 @@ import os
 def server():
     """Server side socket."""
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM, socket.IPPROTO_TCP)
-    server.bind(('127.0.0.1', 5005))
+    server.bind(('127.0.0.1', 5022))
     server.listen(1)
 
     try:
@@ -35,7 +35,7 @@ def server():
 
 def response_ok(final_uri):
     """200 Response."""
-    return b'HTTP/1.1 200 OK \n Content-Type: {} \n <CRLF> \n Message Received.'
+    return 'HTTP/1.1 200 OK \n Content-Type: {} \n <CRLF> \n {}.'.format(final_uri[0], final_uri[1]).encode('utf8')
 
 
 def response_error(request_info):
@@ -51,6 +51,7 @@ def response_error(request_info):
 
 def resolve_uri(content_type, uri):
     """Parse and redirect URIs to display information on terminal."""
+    #import pdb; pdb.set_trace()
     if os.path.isdir(uri):
         return content_type, os.listdir(uri)
 
@@ -61,9 +62,10 @@ def resolve_uri(content_type, uri):
 
 
 def parse_request(request):
-    """Parse request, validate or invalidate request."""
-    request = request.decode('utf8')
-    request_method, request_prot, content_tag, content_type, host_tag, request_host = request.split()[0], request.split()[2], request.split()[3], request.split()[4], request.split()[5], request.split()[6]
+    """Parse request, validate or invalidate request."""                #(u'GET[0] LICENSE[1] HTTP/1.1[2] Content-Type:[3] text/html[4] Host:[5] 127.0.0.1:5017'[6])
+    request = request.decode('utf8').replace('§', '').split()
+
+    request_method, uri, request_prot, content_tag, content_type, host_tag, request_host = request[0], request[1], request[2], request[3], request[4], request[5], request[6]
     host, port = request_host.split(':')[0], request_host.split(':')[1]
 
     if request_method != 'GET':
@@ -77,7 +79,9 @@ def parse_request(request):
     elif not port.isdigit():
         return response_error('Host')
     else:
-        final_uri = resolve_uri(content_type, request_prot)
+        print('in parse request')
+        print(request)
+        final_uri = resolve_uri(content_type, uri)
         response_ok(final_uri)
 
 if __name__ == '__main__':
