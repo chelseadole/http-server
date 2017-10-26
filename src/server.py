@@ -33,9 +33,9 @@ def server():
         server.close()
 
 
-def response_ok():
+def response_ok(final_uri):
     """200 Response."""
-    return b'HTTP/1.1 200 OK \n Content-Type: text/plain \n <CRLF> \n Message Received.'
+    return b'HTTP/1.1 200 OK \n Content-Type: {} \n <CRLF> \n Message Received.'
 
 
 def response_error(request_info):
@@ -47,20 +47,17 @@ def response_error(request_info):
         return b'505 HTTP Version Not Supported\r\n\r\nServer Error'
     elif request_info == 'Host':
         return b'400 Bad Request\r\n\r\nClient Error'
-    else:
-        response_ok()
 
 
-def resolve_uri(uri):
+def resolve_uri(content_type, uri):
     """Parse and redirect URIs to display information on terminal."""
     if os.path.isdir(uri):
-        dir_contents = os.listdir(uri)
-        for item in dir_contents:
-            print(item)
+        return content_type, os.listdir(uri)
+
     elif os.path.isfile(uri):
         file = os.open(uri, os.O_RDONLY)
         read_file = os.read(file, 9000)
-        print(read_file)
+        return content_type, read_file
 
 
 def parse_request(request):
@@ -80,11 +77,8 @@ def parse_request(request):
     elif not port.isdigit():
         return response_error('Host')
     else:
-        return response_ok()# resolve_uri(request_prot)
-
+        final_uri = resolve_uri(content_type, request_prot)
+        response_ok(final_uri)
 
 if __name__ == '__main__':
     server()
-
-
-#  GET /URI HTTP/1.1\r\n\r\nConten-Type: text/html;\r\n\r\nHost: 127.0.0.1:5000
