@@ -8,7 +8,7 @@ import os
 def server():
     """Server side socket."""
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM, socket.IPPROTO_TCP)
-    server.bind(('127.0.0.1', 5003))
+    server.bind(('127.0.0.1', 5005))
     server.listen(1)
 
     try:
@@ -66,7 +66,7 @@ def resolve_uri(uri):
 def parse_request(request):
     """Parse request, validate or invalidate request."""
     request = request.decode('utf8')
-    request_method, request_prot, content_type, host_tag, request_host = request.split()[0], request.split()[2], request.split()[5], request.split()[6], request.split()[7]
+    request_method, request_prot, content_tag, content_type, host_tag, request_host = request.split()[0], request.split()[2], request.split()[3], request.split()[4], request.split()[5], request.split()[6]
     host, port = request_host.split(':')[0], request_host.split(':')[1]
 
     if request_method != 'GET':
@@ -80,8 +80,11 @@ def parse_request(request):
     elif not port.isdigit():
         return response_error('Host')
     else:
-        return request.split()[1]
+        return response_ok()# resolve_uri(request_prot)
 
 
 if __name__ == '__main__':
     server()
+
+
+#  GET /URI HTTP/1.1\r\n\r\nConten-Type: text/html;\r\n\r\nHost: 127.0.0.1:5000
