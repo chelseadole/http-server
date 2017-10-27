@@ -10,8 +10,6 @@ def client(message):
 
     client = socket.socket(*stream_info[:3])
     client.connect(stream_info[-1])
-
-    message = u'Un mensaje über importante con accentos éóí.'
     client.sendall(message.encode('utf8'))
 
     response_msg = ''
@@ -24,3 +22,7 @@ def client(message):
 
     print (response_msg)
     client.close()
+
+
+if __name__ == '__main__':
+    client(u'Un mensaje über importante con accentos éóí.')
