@@ -1,31 +1,33 @@
+# -*- coding: utf-8 -*-
 """Client socket."""
 
+from __future__ import unicode_literals
 import socket
 
 
 def client(message):
-    """Creating client socket."""
-    socket_info = socket.getaddrinfo('127.0.0.1', 5000)
+    """Create a client side socket to send a request to server."""
+    socket_info = socket.getaddrinfo('127.0.0.1', 5005)
     stream_info = [i for i in socket_info if i[1] == socket.SOCK_STREAM][0]
 
     client = socket.socket(*stream_info[:3])
     client.connect(stream_info[-1])
+
     client.sendall((message + '§').encode('utf8'))
 
-    buffer_stop = '§'
-    response_msg = ''
-    reply_complete = False
-    while not reply_complete:
+    reply_from_server = b''
+    buffer_stop = '§'.encode('utf8')
+    message_incomplete = True
+    while message_incomplete:
         part = client.recv(10)
-        response_msg += part.decode('utf8')
-        if buffer_stop in response_msg:
-            break
-
-    print (response_msg.decode('utf8'))
+        reply_from_server += part
+        if buffer_stop in part:
+            message_incomplete = False
+    print(reply_from_server.replace(buffer_stop, b'').decode('utf8'))
     client.close()
-    return(response_msg)
+    return(reply_from_server.replace(buffer_stop, b'').decode('utf8'))
 
 
 if __name__ == '__main__':
     import sys
-    client(str(' '.join(sys.argv[1:len(sys.argv)])))
+    client(sys.argv[1])

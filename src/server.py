@@ -1,21 +1,25 @@
+# -*- coding: utf-8 -*-
 """Server socket."""
 
+from __future__ import unicode_literals
 import socket
 
 
 def server():
     """Creating server socket."""
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM, socket.IPPROTO_TCP)
-    server.bind(('127.0.0.1', 5000))
+    server.bind(('127.0.0.1', 5005))
     server.listen(1)
     try:
         while True:
             conn, addr = server.accept()
             msg_received = b''
-            buffer_stop = '§'
+            buffer_stop = '§'.encode('utf8')
             message_complete = False
             while not message_complete:
+                print('got snow')
                 part = conn.recv(10)
+                print(part)
                 msg_received += part
                 if buffer_stop in part:
                     break
