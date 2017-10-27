@@ -22,7 +22,7 @@ def server():
         print(msg_recieved)
         conn.sendall(msg_recieved.encode('utf8'))
 
-        # conn.close()
+        conn.close()
 
     except KeyboardInterrupt:
         conn.close()
