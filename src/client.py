@@ -10,18 +10,18 @@ def client(message):
 
     client = socket.socket(*stream_info[:3])
     client.connect(stream_info[-1])
-    buffer_key = ''
-    client.sendall(message.encode('utf8'))
+    client.sendall((message + '§').encode('utf8'))
 
+    buffer_stop = '§'
     response_msg = ''
     reply_complete = False
     while not reply_complete:
         part = client.recv(10)
         response_msg += part.decode('utf8')
-        if len(part) < 10:
+        if buffer_stop in response_msg:
             break
 
-    print (response_msg)
+    print (response_msg.decode('utf8'))
     client.close()
     return(response_msg)
 

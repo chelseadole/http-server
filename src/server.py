@@ -11,17 +11,17 @@ def server():
     try:
         while True:
             conn, addr = server.accept()
-            msg_recieved = ''
-            buffer_length = 10
+            msg_received = b''
+            buffer_stop = '§'
             message_complete = False
             while not message_complete:
-                part = conn.recv(buffer_length)
-                msg_recieved += part.decode('utf8')
-                if len(part) < buffer_length:
+                part = conn.recv(10)
+                msg_received += part
+                if buffer_stop in part:
                     break
 
-            print(msg_recieved)
-            conn.sendall(msg_recieved.encode('utf8'))
+            print(msg_received.replace(buffer_stop, b''))
+            conn.sendall(msg_received + buffer_stop)
 
             conn.close()
 
