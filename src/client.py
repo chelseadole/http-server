@@ -10,6 +10,7 @@ def client(message):
 
     client = socket.socket(*stream_info[:3])
     client.connect(stream_info[-1])
+    buffer_key = ''
     client.sendall(message.encode('utf8'))
 
     response_msg = ''
