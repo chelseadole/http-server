@@ -23,6 +23,7 @@ def server():
     conn.sendall(msg_recieved.encode('utf8'))
 
     conn.close()
+    
     server.close()
 
 

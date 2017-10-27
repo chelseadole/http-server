@@ -1,7 +1,6 @@
 """Client socket."""
 
 import socket
-import sys
 
 
 def client(message):
@@ -26,4 +25,5 @@ def client(message):
 
 
 if __name__ == '__main__':
+    import sys
     client(str(' '.join(sys.argv[1:len(sys.argv)])))
