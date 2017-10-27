@@ -8,7 +8,7 @@ import socket
 def server():
     """Creating server socket."""
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM, socket.IPPROTO_TCP)
-    server.bind(('127.0.0.1', 5005))
+    server.bind(('127.0.0.1', 5006))
     server.listen(1)
     try:
         while True:
@@ -17,9 +17,7 @@ def server():
             buffer_stop = '§'.encode('utf8')
             message_complete = False
             while not message_complete:
-                print('got snow')
                 part = conn.recv(10)
-                print(part)
                 msg_received += part
                 if buffer_stop in part:
                     break
