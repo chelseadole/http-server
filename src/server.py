@@ -8,7 +8,7 @@ import os
 def server():
     """Server side socket."""
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM, socket.IPPROTO_TCP)
-    server.bind(('127.0.0.1', 5005))
+    server.bind(('127.0.0.1', 5000))
     server.listen(1)
 
     try:
