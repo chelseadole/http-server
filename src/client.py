@@ -5,7 +5,7 @@ import socket
 
 def client(message):
     """Creating client socket."""
-    socket_info = socket.getaddrinfo('127.0,0.1', 5000)
+    socket_info = socket.getaddrinfo('127.0.0.1', 5009)
     stream_info = [i for i in socket_info if i[1] == socket.SOCK_STREAM][0]
 
     client = socket.socket(*stream_info[:3])
@@ -14,11 +14,13 @@ def client(message):
     message = u'Un mensaje über importante con accentos éóí.'
     client.sendall(message.encode('utf8'))
 
+    response_msg = ''
     reply_complete = False
     while not reply_complete:
         part = client.recv(10)
-        part(part.decode('utf8'))
+        response_msg += part.decode('utf8')
         if len(part) < 10:
             break
 
-    # client.close()
+    print (response_msg)
+    client.close()
