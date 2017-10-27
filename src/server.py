@@ -8,7 +8,7 @@ import os
 def server():
     """Server side socket."""
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM, socket.IPPROTO_TCP)
-    server.bind(('127.0.0.1', 5022))
+    server.bind(('127.0.0.1', 5005))
     server.listen(1)
 
     try:
@@ -40,7 +40,6 @@ def response_ok(final_uri):
 
 def response_error(request_info):
     """Server Error or Client Error response for client."""
-    print(request_info.split())
     if request_info == 'Method':
         return b'501 Not Implemented Error\r\n\r\nServer Error'
     elif request_info == 'Protocol':
@@ -56,8 +55,10 @@ def resolve_uri(content_type, uri):
         return content_type, os.listdir(uri)
 
     elif os.path.isfile(uri):
-        file = os.open(uri, os.O_RDONLY)
-        read_file = os.read(file, 9000)
+        # file = os.open(uri, os.O_RDONLY)
+        # read_file = os.read(file, 9000)
+        with open(uri) as file:
+            read_file = file.read()
         return content_type, read_file
 
 
@@ -79,10 +80,9 @@ def parse_request(request):
     elif not port.isdigit():
         return response_error('Host')
     else:
-        print('in parse request')
-        print(request)
         final_uri = resolve_uri(content_type, uri)
-        response_ok(final_uri)
+        print (final_uri)
+        return response_ok(final_uri)
 
 if __name__ == '__main__':
     server()
