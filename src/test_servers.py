@@ -18,6 +18,19 @@ def test_msg_received_str():
     client()
     assert len(msg_received) > 2
 
+
 def test_buffer_len():
+    """."""
     from server import server
-    
+
+
+def test_response_ok():
+    """Test response ok."""
+    from server import response_ok
+    assert response_ok() == b'HTTP/1.1 200 OK \n Content-Type: text/plain \n <CRLF> \n Message Received.'
+
+
+def test_response_error():
+    """Test response error."""
+    from server import response_error
+    assert response_error() == b'HTTP/1.1 500 Internal Server Error \n Content-Type: text/plain \n <CRLF> \n Server Error.'
