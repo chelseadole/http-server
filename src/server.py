@@ -6,7 +6,7 @@ import socket
 
 
 def server():
-    """Creating server socket."""
+    """Server side socket."""
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM, socket.IPPROTO_TCP)
     server.bind(('127.0.0.1', 5006))
     server.listen(1)
@@ -30,7 +30,7 @@ def server():
     except KeyboardInterrupt:
         conn.close()
         server.close()
-
+        
 
 if __name__ == '__main__':
     server()
