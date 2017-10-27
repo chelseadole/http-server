@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
-"""Client socket."""
+"""Module for client socket."""
 
 import socket
 
 
 def client(message):
-    """Client side socket."""
+    """Create a client side socket to send a request to server."""
     socket_info = socket.getaddrinfo('127.0.0.1', 5000)
     stream_info = [i for i in socket_info if i[1] == socket.SOCK_STREAM][0]
 
@@ -19,17 +19,12 @@ def client(message):
     message_incomplete = True
     while message_incomplete:
         part = client.recv(10)
-        print(part)
         reply_from_server += part
         if buffer_stop in part:
             message_incomplete = False
     print(reply_from_server.replace(buffer_stop, b'').decode('utf8'))
-
     client.close()
+    return(reply_from_server.replace(buffer_stop, b'').decode('utf8'))
 
 if __name__ == '__main__':
-    client(u'Un mensaje über importante con accentos éóí.')
-
-
-# sys.version_info.major == 3
-# from __future__ import unicode-literals
+    client('Un mensaje über importante con accentos éóí.')

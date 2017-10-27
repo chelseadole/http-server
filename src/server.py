@@ -19,7 +19,6 @@ def server():
             while not message_complete:
                 part = conn.recv(10)
                 msg_received += part
-                print (msg_received)
                 if buffer_stop in part:
                     break
 
