@@ -9,7 +9,7 @@ setup(
     author_email='chelseadole@gmail, kavdyjh@gmail.com',
     package_dir={' ': 'src'},
     py_modules=['server'],
-    install_requires=[],
+    install_requires=['gevent'],
     extras_require={
         'test': ['pytest', 'pytest-cov', 'pytest-watch', 'tox'],
         'development': ['ipython']})
