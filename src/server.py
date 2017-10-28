@@ -60,14 +60,11 @@ def parse_request(request):
         return response_error('Method')
     elif request_prot != 'HTTP/1.1':
         return response_error('Protocol')
-    elif len(host.split('.')) != 4 or not [i.isdigit() for i in host.split('.')]:
-        print('1')
+    elif len(host.split('.')) != 4 or host.replace('.', '').isdigit() == False:
         return response_error('Host')
     elif host_tag != 'Host:':
-        print('2')
         return response_error('Host')
     elif not port.isdigit():
-        print('3')
         return response_error('Host')
     else:
         return response_ok()
