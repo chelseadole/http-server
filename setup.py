@@ -8,8 +8,8 @@ setup(
     author='Chelsea Dole, Kavdi Hodgson',
     author_email='chelseadole@gmail, kavdyjh@gmail.com',
     package_dir={' ': 'src'},
-    py_modules=['server'],
+    py_modules=['server', 'client', 'test_servers'],
     install_requires=[],
     extras_require={
-        'test': ['pytest', 'pytest-cov', 'pytest-watch', 'tox'],
+        'test': ['pytest', 'pytest-cov', 'tox'],
         'development': ['ipython']})
