@@ -8,7 +8,7 @@ import socket
 def server():
     """Server side socket."""
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM, socket.IPPROTO_TCP)
-    server.bind(('127.0.0.1', 5002))
+    server.bind(('127.0.0.1', 5000))
     server.listen(1)
 
     try:
@@ -37,7 +37,7 @@ def server():
 
 def response_ok():
     """200 Response."""
-    return 'HTTP/1.1 200 OK \n Content-Type: text/plain \n <CRLF> \n Message Received.'
+    return 'HTTP/1.1 200 OK\n\r\n\rContent-Type: text/plain\n\r\n\rMessage Received.'
 
 
 def response_error(request_info):
