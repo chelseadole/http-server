@@ -34,12 +34,12 @@ def server():
 
 def response_ok():
     """200 Response."""
-    return b'HTTP/1.1 200 OK \n Content-Type: text/plain \n <CRLF> \n Message Received.'
+    return b'HTTP/1.1 200 OK\n\r\n\rContent-Type: text/plain\n\r\n\rMessage Received.'
 
 
 def response_error():
     """500 Server Error response for client."""
-    return b'HTTP/1.1 500 Internal Server Error \n Content-Type: text/plain \n <CRLF> \n Server Error.'
+    return b'HTTP/1.1 500 Internal Server Error\n\r\n\rContent-Type: text/plain\n\r\n\rServer Error.'
 
 if __name__ == '__main__':
     server()

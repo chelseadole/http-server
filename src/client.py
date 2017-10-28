@@ -28,4 +28,4 @@ def client(message):
 
 if __name__ == '__main__':
     import sys
-    client(sys.argv[1])
+    client(sys.argv[0])
