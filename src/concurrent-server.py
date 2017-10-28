@@ -1,41 +1,57 @@
 # -*- coding: utf-8 -*-
-"""Server socket."""
+"""Server socket, concurrent version."""
 
 import socket
+import sys
 import os
+import select
 
 
-def server():
-    """Server side socket."""
-    server = socket.socket(socket.AF_INET, socket.SOCK_STREAM, socket.IPPROTO_TCP)
-    server.bind(('127.0.0.1', 5000))
-    server.listen(1)
+def server(log_buffer=sys.stderr):
+    """Concurrent server."""
+    address = ('127.0.0.1', 5003)
+    server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    server.bind(address)
+    server.listen(5)
 
-    try:
-        while True:
-            conn, addr = server.accept()
-            msg_received = b''
-            buffer_stop = b'\xa7'
-            message_complete = False
-            while not message_complete:
-                part = conn.recv(10)
-                msg_received += part
-                if buffer_stop in part:
-                    break
+    buffer_stop = b'\xa7'
+    buff_size = 10
 
-            print(msg_received.replace(buffer_stop, b''))
-            conn.sendall(parse_request(msg_received) + buffer_stop)
+    channels = [server, sys.stdin]
+    server_running = True
 
-            conn.close()
+    while server_running:
 
-    except KeyboardInterrupt:
-        conn.close()
-        server.close()
+        read_ready, write_ready, except_ready = select.select(channels, [], [], 0)
+
+        for msg in read_ready:
+
+            if msg is server:
+                handler_socket, address = msg.accept()
+                channels.append(handler_socket)
+
+            elif msg is sys.stdin:
+                sys.stdin.readline()
+                server_running = False
+
+            else:
+                msg_received = b''
+                message_complete = False
+                while message_complete:
+                    part = msg.recv(buff_size)
+                    msg_received += part
+                    if buffer_stop in part:
+                        message_complete = True
+                print(msg_received.replace(buffer_stop, b''))
+                msg.sendall(parse_request(msg_received) + buffer_stop)
+
+    server.close()
 
 
 def response_ok(final_uri):
     """200 Response."""
-    return 'HTTP/1.1 200 OK \n Content-Type: {} \n <CRLF> \n {}.'.format(final_uri[0], final_uri[1]).encode('utf8')
+    return 'HTTP/1.1 200 OK\nContent-Type: {}\n\r\n\r{}.'.format(final_uri[0], final_uri[1]).encode('utf8')
 
 
 def response_error(request_info):
@@ -50,7 +66,6 @@ def response_error(request_info):
 
 def resolve_uri(content_type, uri):
     """Parse and redirect URIs to display information on terminal."""
-    #import pdb; pdb.set_trace()
     if os.path.isdir(uri):
         return content_type, os.listdir(uri)
 
@@ -63,10 +78,10 @@ def resolve_uri(content_type, uri):
 
 
 def parse_request(request):
-    """Parse request, validate or invalidate request."""                #(u'GET[0] LICENSE[1] HTTP/1.1[2] Content-Type:[3] text/html[4] Host:[5] 127.0.0.1:5017'[6])
+    """Parse request, validate or invalidate request."""
     request = request.decode('utf8').replace('§', '').split()
 
-    request_method, uri, request_prot, content_tag, content_type, host_tag, request_host = request[0], request[1], request[2], request[3], request[4], request[5], request[6]
+    request_method, uri, request_prot, content_type, host_tag, request_host = request[0], request[1], request[2], request[4], request[5], request[6]
     host, port = request_host.split(':')[0], request_host.split(':')[1]
 
     if request_method != 'GET':

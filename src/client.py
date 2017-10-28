@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
 """Client socket."""
 
+from __future__ import unicode_literals
+
 import socket
 
 
 def client(message):
     """Client side socket."""
-    socket_info = socket.getaddrinfo('127.0.0.1', 5000)
+    socket_info = socket.getaddrinfo('127.0.0.1', 5003)
     stream_info = [i for i in socket_info if i[1] == socket.SOCK_STREAM][0]
 
     client = socket.socket(*stream_info[:3])
@@ -19,7 +21,6 @@ def client(message):
     message_incomplete = True
     while message_incomplete:
         part = client.recv(10)
-        print(part)
         reply_from_server += part
         if buffer_stop in part:
             message_incomplete = False
@@ -28,8 +29,7 @@ def client(message):
     client.close()
 
 if __name__ == '__main__':
-    client(u'Un mensaje über importante con accentos éóí.')
+    client(u'GET LICENSE HTTP/1.1\r\n\r\nContent-Type: text/html;\r\n\r\nHost: 127.0.0.1:5000')
 
 
 # sys.version_info.major == 3
-# from __future__ import unicode-literals
