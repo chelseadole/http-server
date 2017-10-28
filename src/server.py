@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """Server socket."""
 
+from __future__ import unicode_literals
 import socket
 
 
