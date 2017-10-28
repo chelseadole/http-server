@@ -1,27 +1,18 @@
 """Tests for server and client sockets."""
 
-import pytest
-
-
-def test_server_response_ok():
-    """Testing response ok 200 msg to client."""
-    from server import server
-    from server import response_ok
-    assert server() == ok_200_msg
+from client import client
 
 
 def test_msg_received_str():
     """Testing string received at server from client."""
-    from server import server
-    from client import client
-    server()
-    client()
-    assert len(msg_received) > 2
+    x = client('Hello world!')
+    assert x == b'HTTP/1.1 200 OK \n Content-Type: text/plain \n <CRLF> \n Message Received.'
 
 
-def test_buffer_len():
-    """."""
-    from server import server
+def test_msg_received_two():
+    """Test for buffer info."""
+    x = client('This is a message with some info.')
+    assert x == b'HTTP/1.1 200 OK \n Content-Type: text/plain \n <CRLF> \n Message Received.'
 
 
 def test_response_ok():

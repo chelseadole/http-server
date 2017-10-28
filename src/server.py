@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 """Server socket."""
-
+from __future__ import unicode_literals
 import socket
 
 
 def server():
     """Server side socket."""
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM, socket.IPPROTO_TCP)
-    server.bind(('127.0.0.1', 5000))
+    server.bind(('127.0.0.1', 5007))
     server.listen(1)
 
     try:
@@ -40,7 +40,6 @@ def response_ok():
 def response_error():
     """500 Server Error response for client."""
     return b'HTTP/1.1 500 Internal Server Error \n Content-Type: text/plain \n <CRLF> \n Server Error.'
-
 
 if __name__ == '__main__':
     server()
