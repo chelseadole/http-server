@@ -52,7 +52,6 @@ def response_error(request_info):
 
 def parse_request(request):
     """Parse request, validate or invalidate request."""
-    print('made it to parse_request')
     request = request.decode('utf8')
     print(request.split())
     request_method, request_prot, host_tag, request_host = request.split()[0], request.split()[2], request.split()[3], request.split()[4]

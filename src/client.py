@@ -23,12 +23,11 @@ def client(message):
         if buffer_stop in part:
             message_incomplete = False
     print(reply_from_server.replace(buffer_stop, b'').decode('utf8'))
+    return(reply_from_server.replace(buffer_stop, b'').decode('utf8'))
 
     client.close()
 
 if __name__ == '__main__':
-    client(u'POST /URI HTTP/1.1\r\n\r\nHost: 127.0.0.1:5000')
-
-
-# sys.version_info.major == 3
-# from __future__ import unicode-literals
+    import sys
+    client(sys.argv[1])
+# POST /URI HTTP/1.1\r\n\r\nHost: 127.0.0.1:5000
