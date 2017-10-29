@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 """Client socket."""
 
+from __future__ import unicode_literals
 import socket
 
 
 def client(message):
     """Client side socket."""
-    socket_info = socket.getaddrinfo('127.0.0.1', 5000)
+    socket_info = socket.getaddrinfo('127.0.0.1', 5002)
     stream_info = [i for i in socket_info if i[1] == socket.SOCK_STREAM][0]
 
     client = socket.socket(*stream_info[:3])
@@ -27,8 +28,9 @@ def client(message):
     client.close()
 
 if __name__ == '__main__':
-    client(u'GET LICENSE HTTP/1.1\r\n\r\nContent-Type: text/html;\r\n\r\nHost: 127.0.0.1:5000')
+    import sys
+    client(sys.argv[1])
 
-
+# ;'GET LICENSE HTTP/1.1\r\n\r\nContent-Type: text/html;\r\n\r\nHost: 127.0.0.1:5000'
 # sys.version_info.major == 3
 # from __future__ import unicode-literals
